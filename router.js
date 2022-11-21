@@ -7,12 +7,12 @@ export function createRouter(ssrContext, createDefaultRouter, routerOptions, ...
 
   if (process.server && ssrContext && ssrContext.nuxt && ssrContext.req) {
     const req = ssrContext.req
-    let LOCAL_LEVEL = process.env.NODE_ENV === 'development' ? 2 : 3
+    let LOCAL_LEVEL = process.env.NODE_ENV === 'development' ? 1 : 4
     const domainLevel = (req.headers.host.match(/\./g) || []).length + 1
-    if (req.headers.host.includes('localhost')) {
-      LOCAL_LEVEL = process.env.NODE_ENV === 'development' ? 1 : 2
+    if (process.env.NODE_ENV === 'development' && req.headers.host.includes('localhost')) {
+      LOCAL_LEVEL = 1
     }
-    routesDirectory = domainLevel > LOCAL_LEVEL ? 'user-store' : 'main'
+    routesDirectory = domainLevel > LOCAL_LEVEL ? 'user-store' : 'main-store'
     ssrContext.nuxt.routesDirectory = routesDirectory
   }
   if (process.client) {
@@ -31,7 +31,7 @@ export function createRouter(ssrContext, createDefaultRouter, routerOptions, ...
   if (routesDirectory) {
     newRoutes = options.routes
       .filter((route) => {
-        const toRemove = routesDirectory === 'user-store' ? 'main' : 'user-store'
+        const toRemove = routesDirectory === 'user-store' ? 'main-store' : 'user-store'
         return !isUnderDirectory(route, toRemove)
       })
       .map((route) => {
