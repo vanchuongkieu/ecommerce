@@ -7,10 +7,10 @@ export function createRouter(ssrContext, createDefaultRouter, routerOptions, ...
 
   if (process.server && ssrContext && ssrContext.nuxt && ssrContext.req) {
     const req = ssrContext.req
-    let LOCAL_LEVEL = 2
+    let LOCAL_LEVEL = process.env.NODE_ENV === 'development' ? 2 : 3
     const domainLevel = (req.headers.host.match(/\./g) || []).length + 1
     if (req.headers.host.includes('localhost')) {
-      LOCAL_LEVEL = 1
+      LOCAL_LEVEL = process.env.NODE_ENV === 'development' ? 1 : 2
     }
     routesDirectory = domainLevel > LOCAL_LEVEL ? 'user-store' : 'main'
     ssrContext.nuxt.routesDirectory = routesDirectory
