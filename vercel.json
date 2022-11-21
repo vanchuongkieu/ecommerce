@@ -1,3 +1,23 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
+  "version": 2,
+  "builds": [
+    {
+      "src": "nuxt.config.js",
+      "use": "@nuxtjs/vercel-builder",
+      "config": {
+        "serverFiles": ["package.json"]
+      }
+    }
+  ],
+  "rewrites": [
+    {
+      "src": "/sw.js",
+      "continue": true,
+      "headers": {
+        "Cache-Control": "public, max-age=0, must-revalidate",
+        "Service-Worker-Allowed": "/"
+      }
+    },
+    { "source": "/(.*)", "destination": "/" }
+  ]
 }
